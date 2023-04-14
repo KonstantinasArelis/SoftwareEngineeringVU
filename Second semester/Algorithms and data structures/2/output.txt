@@ -1,0 +1,220 @@
+9772106 Board is correct after 25009900 actions
+a b c d e f g h 
+                8
+                7
+  *             6
+  *     *   *   5
+  *     *   *   4
+  *             3
+                2
+                1
+================
+9772149 Board is correct after 25010008 actions
+a b c d e f g h 
+                8
+                7
+  *       *     6
+  *             5
+  *     * * *   4
+  *             3
+                2
+                1
+================
+9772164 Board is correct after 25010044 actions
+a b c d e f g h 
+                8
+                7
+  *       *     6
+  *             5
+  *     * * *   4
+  *             3
+                2
+                1
+================
+9772191 Board is correct after 25010116 actions
+a b c d e f g h 
+                8
+                7
+  *             6
+  *     *   *   5
+  *     *   *   4
+  *             3
+                2
+                1
+================
+9772586 Board is correct after 25011129 actions
+a b c d e f g h 
+                8
+                7
+                6
+  * *   *   *   5
+  *     *   *   4
+  *             3
+                2
+                1
+================
+9772629 Board is correct after 25011237 actions
+a b c d e f g h 
+                8
+                7
+          *     6
+  * *           5
+  *     * * *   4
+  *             3
+                2
+                1
+================
+9772644 Board is correct after 25011273 actions
+a b c d e f g h 
+                8
+                7
+          *     6
+  * *           5
+  *     * * *   4
+  *             3
+                2
+                1
+================
+9772671 Board is correct after 25011345 actions
+a b c d e f g h 
+                8
+                7
+                6
+  * *   *   *   5
+  *     *   *   4
+  *             3
+                2
+                1
+================
+9772781 Board is correct after 25011628 actions
+a b c d e f g h 
+                8
+    *           7
+                6
+  *         *   5
+  *   * *   *   4
+  *             3
+                2
+                1
+================
+9772809 Board is correct after 25011700 actions
+a b c d e f g h 
+                8
+    *           7
+          *     6
+  *             5
+  *     *   *   4
+  *     *       3
+                2
+                1
+================
+9772880 Board is correct after 25011880 actions
+a b c d e f g h 
+                8
+    *           7
+          *     6
+  *             5
+  *     *   *   4
+  *     *       3
+                2
+                1
+================
+9772908 Board is correct after 25011952 actions
+a b c d e f g h 
+                8
+    *           7
+                6
+  *         *   5
+  *   * *   *   4
+  *             3
+                2
+                1
+================
+9773246 Board is correct after 25012816 actions
+a b c d e f g h 
+                8
+    *           7
+                6
+  *         *   5
+  *   * *   *   4
+  *             3
+                2
+                1
+================
+9773276 Board is correct after 25012893 actions
+a b c d e f g h 
+                8
+                7
+      *         6
+  *         *   5
+  *   * *   *   4
+  *             3
+                2
+                1
+================
+9773306 Board is correct after 25012970 actions
+a b c d e f g h 
+                8
+                7
+                6
+  *     *   *   5
+  *   * *   *   4
+  *             3
+                2
+                1
+================
+9773318 Board is correct after 25013001 actions
+a b c d e f g h 
+                8
+        *       7
+                6
+  *             5
+  *   * * * *   4
+  *             3
+                2
+                1
+================
+9773347 Board is correct after 25013073 actions
+a b c d e f g h 
+                8
+        *       7
+                6
+  *             5
+  *   * * * *   4
+  *             3
+                2
+                1
+================
+9773349 Board is correct after 25013078 actions
+a b c d e f g h 
+                8
+                7
+          *     6
+  *             5
+  *   * * * *   4
+  *             3
+                2
+                1
+================
+9773351 Board is correct after 25013083 actions
+a b c d e f g h 
+                8
+                7
+                6
+  *         *   5
+  *   * * * *   4
+  *             3
+                2
+                1
+================
+9773364 Board is correct after 25013114 actions
+a b c d e f g h 
+                8
+                7
+          *     6
+  *             5
+  *   * * * *   4
+  *             3
+                2
+                1
+================
