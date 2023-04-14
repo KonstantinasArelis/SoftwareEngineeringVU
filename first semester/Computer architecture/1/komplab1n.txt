@@ -1,0 +1,80 @@
+
+a100
+mov byte [300], 65
+mov dx, 300
+mov ah, 0A
+int 21
+mov cl, byte ptr [301]
+mov ch, 03
+inc cx
+mov bx, 301
+jmp 120
+
+a120
+cmp bx, cx
+je 210
+inc bx
+mov dh, byte ptr[bx]
+cmp dh, 30
+jl 120
+cmp dh, 39
+jg 120
+mov ax,0
+mov dl,0
+ror dh, 1
+pushf
+pop ax
+and ax, 1
+add dl, al
+ror dh, 2
+pushf
+pop ax
+and ax, 1
+add dl, al
+ror dh, 1
+pushf
+pop ax
+and ax, 1
+add dl, al
+cmp dl, 2
+je 200
+cmp bx, cx
+je 210
+jmp 120
+
+a200
+xor byte ptr[bx], ff
+cmp bx, cx
+je 210
+jmp 120
+
+a210
+mov ah, 09
+jmp 220
+
+a220
+mov dx, bx
+mov byte ptr [bx+1], 24
+int 21
+cmp bx, 302
+je 250
+dec bx
+jmp 220
+
+a250
+mov dx, bx
+mov byte ptr[bx], 0d
+mov byte ptr[bx+1], 0a
+mov byte ptr[bx+2], 24
+mov ah, 09
+int 21
+mov ah, 4c
+int 21
+
+n karelis.com
+r cx
+500
+w
+q
+
+
