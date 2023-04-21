@@ -14,11 +14,13 @@ public class TxtFile extends MyFile implements TextFileFunctionality{
 
     public TxtFile(String path){
         super(path);
+        /*
         try{
             this.encoding = getEncoding();
         }catch(InvalidFileFormatException e){
             System.out.println("wrong file type for getting encoding ");
         }
+         */
         
     }
 
@@ -26,6 +28,7 @@ public class TxtFile extends MyFile implements TextFileFunctionality{
     public String getEncoding() throws InvalidFileFormatException{
         FileInputStream fis = null;
         InputStreamReader isr = null;
+        //System.out.println("TEST " + filePath.toString());
         if(!this.filePath.toString().endsWith(".txt")){
             throw new InvalidFileFormatException("Cant get encoding of a not .txt file",this.filePath.toString());
         }else{
