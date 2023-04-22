@@ -19,6 +19,7 @@ Starting data for simulation:
 
 #define BOOK_AMOUNT 211
 #define MAX_EMPLOYEE_AMOUNT 1000
+#define LIBARY_OPEN_TIME 8
 
 void InitializeStartingValues(float *bookCompareTime, float visitorChance[], float *bookExistanceChance);
 void UpdateEmployeeOccupancy(float employeeOccupancy[]);
@@ -26,6 +27,8 @@ void PrintEmployeeOccupancy(float employeeOccupancy[]);
 void PrintStartingValues(float visitorChance[],float bookCompareTime,float bookExistanceChance);
 void UpdateEmployeeRecord(int *employeeRecord,float employeeOccupancy[]);
 void ResetParamaters(float employeeOccupancy[]);
+void InitializeTimetable(int VisitorTimeTable[][60], float visitorChance[]);
+void GenerateRandomBookID(float bookExistanceChance, int *randomBookID);
 
 // initializes the starting values to the according specifications:
 // bookCompareTime time 0.1 - 1
@@ -33,7 +36,7 @@ void ResetParamaters(float employeeOccupancy[]);
 // bookExistanceChance 0.5 - 0.9
 void InitializeStartingValues(float *bookCompareTime, float visitorChance[], float *bookExistanceChance){
     *bookCompareTime = (rand()%9+1)/10.0;
-    for(int i=0;i<8;i++){
+    for(int i=0;i<LIBARY_OPEN_TIME;i++){
         visitorChance[i] = (rand()%99+1)/100.0;
     }
     *bookExistanceChance = (rand()%4+5)/10.0;
@@ -64,11 +67,11 @@ void PrintEmployeeOccupancy(float employeeOccupancy[]){
 // prints the randomly initialized starting values 
 void PrintStartingValues(float visitorChance[],float bookCompareTime,float bookExistanceChance){
     printf("Starting values: \nbookCompareTime: %.2f\nbookExistanceChance: %.2f\nvisitorChance: ",bookCompareTime,bookExistanceChance);
-    for(size_t i =0;i<8;i++){
+    for(size_t i =0;i<LIBARY_OPEN_TIME;i++){
         printf("%.2f ",visitorChance[i]);
     }
     printf("\n");
-    printf("When no book is found, search time %f\n",BOOK_AMOUNT*bookCompareTime/60);
+    printf("When no book is found, search time %.2f\n",BOOK_AMOUNT*bookCompareTime/60);
 }
 
 // updates the maximum amount of employees currently working
@@ -84,27 +87,75 @@ void UpdateEmployeeRecord(int *employeeRecord,float employeeOccupancy[]){
     }
 }
 
-// 
+// resets employeeOccupancy
 void ResetParamaters(float employeeOccupancy[]){
     for(size_t i=0;i<MAX_EMPLOYEE_AMOUNT;i++){
         employeeOccupancy[i]=0;
     }
 }
 
+void InitializeTimetable(int VisitorTimeTable[][60], float visitorChance[]){
+    int newVisitorAmount;
+    for(size_t i=0;i<LIBARY_OPEN_TIME;i++){
+        newVisitorAmount = floor(visitorChance[i]*60);
+        for(size_t j=0;j<newVisitorAmount;j++){
+            VisitorTimeTable[i][rand()%60]++;
+        }
+    }
+}
+
+void PrintTimetable(int VisitorTimeTable[][60], int setting){
+    if(setting == 0){
+        for(size_t i=0;i<LIBARY_OPEN_TIME;i++){
+            printf("%lu hour: \n",i);
+            for(size_t j=0;j<60;j++){
+                printf("%d ",VisitorTimeTable[i][j]);
+            }
+        printf("\n");
+        }
+        return;
+    }
+    if(setting == 1){
+        for(size_t i=0;i<LIBARY_OPEN_TIME;i++){
+            printf("%lu hour: ",i);
+            for(size_t j=0;j<60;j++){
+                for(size_t k=0;k<VisitorTimeTable[i][j];k++){
+                    printf("*");
+                }
+            }
+        printf("\n");
+        }
+        return;
+    }
+}
+
+void GenerateRandomBookID(float bookExistanceChance, int *randomBookID){
+    if((rand()%10)/10.0<bookExistanceChance){
+        *randomBookID = rand()%BOOK_AMOUNT;
+    }else{
+        *randomBookID = BOOK_AMOUNT;
+    }
+}
 
 int main(){
     float bookCompareTime;
-    float visitorChance[8];
+    float visitorChance[LIBARY_OPEN_TIME];
     float bookExistanceChance;
-    char **unsortedBookList;
     int randomBookID;
-    float newVisitorAmount;
     float employeeOccupancy[MAX_EMPLOYEE_AMOUNT]={0};
+    int VisitorTimeTable[LIBARY_OPEN_TIME][60]={0};
     int employeeRecord=0;
+
+    int newVisitorAmount;
+    
+    
+
     // Initialization
     srand(time(NULL));
     InitializeStartingValues(&bookCompareTime,visitorChance,&bookExistanceChance);
     PrintStartingValues(visitorChance, bookCompareTime, bookExistanceChance);
+    InitializeTimetable(VisitorTimeTable,visitorChance);
+    PrintTimetable(VisitorTimeTable,1);
 
     /*
     visitorChance[0]=1;
@@ -116,33 +167,32 @@ int main(){
     visitorChance[6]=0;
     visitorChance[7]=0;
     */
-    // 8 hour unsorted search simulation
-    for(size_t i=0;i<8;i++){
-        newVisitorAmount = floor(visitorChance[i]*60);
-        
+    
+    // LIBARY_OPEN_TIME hour unsorted search simulation
+    for(size_t i=0;i<LIBARY_OPEN_TIME;i++){
+
         //unsorted list
-        for(size_t j=0;j<newVisitorAmount;j++){
-            //generation of book ID
-            if((rand()%10)/10.0<bookExistanceChance){
-                randomBookID = rand()%BOOK_AMOUNT;
-            }else{
-                randomBookID=BOOK_AMOUNT;
-            }
-            for(size_t k=0;k<MAX_EMPLOYEE_AMOUNT;k++){
-                if(employeeOccupancy[k]==0){
-                    employeeOccupancy[k]=randomBookID*bookCompareTime/60;
-                    break;
+        for(size_t j=0;j<60;j++){
+            newVisitorAmount=VisitorTimeTable[i][j];
+            for(size_t k=0;k<newVisitorAmount;k++){
+                GenerateRandomBookID(bookExistanceChance, &randomBookID);
+
+                // update how much employee works
+                for(size_t k=0;k<MAX_EMPLOYEE_AMOUNT;k++){
+                    if(employeeOccupancy[k]==0){
+                        employeeOccupancy[k]=randomBookID*bookCompareTime;
+                        break;
+                    }
                 }
             }
+            UpdateEmployeeRecord(&employeeRecord,employeeOccupancy);
+            UpdateEmployeeOccupancy(employeeOccupancy);
         }
-
         //printf("new visitors: %.2f\n",newVisitorAmount);
         //printf("before %lu hour:\n",i);
         //PrintEmployeeOccupancy(employeeOccupancy);
-
-        UpdateEmployeeRecord(&employeeRecord,employeeOccupancy);
-        UpdateEmployeeOccupancy(employeeOccupancy);
     }
+    
     printf("Employee record: %d\n",employeeRecord);
     ResetParamaters(employeeOccupancy);
 
