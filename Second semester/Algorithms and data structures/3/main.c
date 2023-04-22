@@ -22,12 +22,12 @@ Starting data for simulation:
 #define LIBARY_OPEN_TIME 8
 
 void InitializeStartingValues(float *bookCompareTime, float visitorChance[], float *bookExistanceChance);
-void UpdateEmployeeOccupancy(float employeeOccupancy[]);
-void PrintEmployeeOccupancy(float employeeOccupancy[]);
+void UpdateEmployeeOccupancy(int employeeOccupancy[]);
+void PrintEmployeeOccupancy(int employeeOccupancy[]);
 void PrintStartingValues(float visitorChance[],float bookCompareTime,float bookExistanceChance);
-void UpdateEmployeeRecord(int *employeeRecord,float employeeOccupancy[]);
-void ResetParamaters(float employeeOccupancy[]);
-void InitializeTimetable(int VisitorTimeTable[][60], float visitorChance[]);
+void UpdateEmployeeRecord(int *employeeRecord,int employeeOccupancy[]);
+void ResetParamaters(int employeeOccupancy[]);
+void InitializeTimetable(int visitorTimeTable[][60], float visitorChance[]);
 void GenerateRandomBookID(float bookExistanceChance, int *randomBookID);
 
 // initializes the starting values to the according specifications:
@@ -45,7 +45,7 @@ void InitializeStartingValues(float *bookCompareTime, float visitorChance[], flo
 }
 
 //subtracks 1 hour of every employee occupancy (to be called every hour change of simulation)
-void UpdateEmployeeOccupancy(float employeeOccupancy[]){
+void UpdateEmployeeOccupancy(int employeeOccupancy[]){
     //PrintEmployeeOccupancy(employeeOccupancy);
     for(size_t i=0;i<MAX_EMPLOYEE_AMOUNT;i++){
         employeeOccupancy[i]-=1;
@@ -56,12 +56,14 @@ void UpdateEmployeeOccupancy(float employeeOccupancy[]){
 }
 
 // prints the occupancy status of employees
-void PrintEmployeeOccupancy(float employeeOccupancy[]){
+void PrintEmployeeOccupancy(int employeeOccupancy[]){
     for(size_t i=0;i<MAX_EMPLOYEE_AMOUNT;i++){
         if(employeeOccupancy[i]!=0){
-            printf("%lu: %.2f\n",i,employeeOccupancy[i]);
+            printf("%lu: %d||",i,employeeOccupancy[i]);
         }
+        
     }
+    printf("\n");
 }
 
 // prints the randomly initialized starting values 
@@ -75,7 +77,7 @@ void PrintStartingValues(float visitorChance[],float bookCompareTime,float bookE
 }
 
 // updates the maximum amount of employees currently working
-void UpdateEmployeeRecord(int *employeeRecord,float employeeOccupancy[]){
+void UpdateEmployeeRecord(int *employeeRecord,int employeeOccupancy[]){
     int temp=0;
     for(size_t i=0;i<MAX_EMPLOYEE_AMOUNT;i++){
         if(employeeOccupancy[i]>0){
@@ -88,28 +90,28 @@ void UpdateEmployeeRecord(int *employeeRecord,float employeeOccupancy[]){
 }
 
 // resets employeeOccupancy
-void ResetParamaters(float employeeOccupancy[]){
+void ResetParamaters(int employeeOccupancy[]){
     for(size_t i=0;i<MAX_EMPLOYEE_AMOUNT;i++){
         employeeOccupancy[i]=0;
     }
 }
 
-void InitializeTimetable(int VisitorTimeTable[][60], float visitorChance[]){
+void InitializeTimetable(int visitorTimeTable[][60], float visitorChance[]){
     int newVisitorAmount;
     for(size_t i=0;i<LIBARY_OPEN_TIME;i++){
         newVisitorAmount = floor(visitorChance[i]*60);
         for(size_t j=0;j<newVisitorAmount;j++){
-            VisitorTimeTable[i][rand()%60]++;
+            visitorTimeTable[i][rand()%60]++;
         }
     }
 }
 
-void PrintTimetable(int VisitorTimeTable[][60], int setting){
+void PrintTimetable(int visitorTimeTable[][60], int setting){
     if(setting == 0){
         for(size_t i=0;i<LIBARY_OPEN_TIME;i++){
             printf("%lu hour: \n",i);
             for(size_t j=0;j<60;j++){
-                printf("%d ",VisitorTimeTable[i][j]);
+                printf("%d ",visitorTimeTable[i][j]);
             }
         printf("\n");
         }
@@ -119,7 +121,7 @@ void PrintTimetable(int VisitorTimeTable[][60], int setting){
         for(size_t i=0;i<LIBARY_OPEN_TIME;i++){
             printf("%lu hour: ",i);
             for(size_t j=0;j<60;j++){
-                for(size_t k=0;k<VisitorTimeTable[i][j];k++){
+                for(size_t k=0;k<visitorTimeTable[i][j];k++){
                     printf("*");
                 }
             }
@@ -142,8 +144,8 @@ int main(){
     float visitorChance[LIBARY_OPEN_TIME];
     float bookExistanceChance;
     int randomBookID;
-    float employeeOccupancy[MAX_EMPLOYEE_AMOUNT]={0};
-    int VisitorTimeTable[LIBARY_OPEN_TIME][60]={0};
+    int employeeOccupancy[MAX_EMPLOYEE_AMOUNT]={0};
+    int visitorTimeTable[LIBARY_OPEN_TIME][60]={0};
     int employeeRecord=0;
 
     int newVisitorAmount;
@@ -154,8 +156,8 @@ int main(){
     srand(time(NULL));
     InitializeStartingValues(&bookCompareTime,visitorChance,&bookExistanceChance);
     PrintStartingValues(visitorChance, bookCompareTime, bookExistanceChance);
-    InitializeTimetable(VisitorTimeTable,visitorChance);
-    PrintTimetable(VisitorTimeTable,1);
+    InitializeTimetable(visitorTimeTable,visitorChance);
+    PrintTimetable(visitorTimeTable,1);
 
     /*
     visitorChance[0]=1;
@@ -173,7 +175,7 @@ int main(){
 
         //unsorted list
         for(size_t j=0;j<60;j++){
-            newVisitorAmount=VisitorTimeTable[i][j];
+            newVisitorAmount=visitorTimeTable[i][j];
             for(size_t k=0;k<newVisitorAmount;k++){
                 GenerateRandomBookID(bookExistanceChance, &randomBookID);
 
@@ -188,9 +190,10 @@ int main(){
             UpdateEmployeeRecord(&employeeRecord,employeeOccupancy);
             UpdateEmployeeOccupancy(employeeOccupancy);
         }
-        //printf("new visitors: %.2f\n",newVisitorAmount);
-        //printf("before %lu hour:\n",i);
-        //PrintEmployeeOccupancy(employeeOccupancy);
+        /*
+        printf("%lu hour: \n",i);
+        PrintEmployeeOccupancy(employeeOccupancy);
+        */
     }
     
     printf("Employee record: %d\n",employeeRecord);
