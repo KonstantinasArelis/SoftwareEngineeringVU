@@ -1,7 +1,13 @@
-#define BOOK_AMOUNT 1000
+#define BOOK_AMOUNT 10000
 #define MAX_BOOK_NAME_LENGHT 255
 #define MAX_EMPLOYEE_AMOUNT 100000
 #define LIBARY_OPEN_TIME 8
+#define INPUT_FILE_ORDERED "bookListSorted2.txt"
+#define INPUT_FILE_UNORDERED "bookListUnsorted2.txt"
+// bookListSorted.txt - 211 books
+// bookListSorted2.txt - 10000 books
+// bookListSorted3.txt - 5000 books
+// CHANGE BOOK_AMOUNT WHEN CHANGING INPUT FILES!
 
 int compareAmount;
 

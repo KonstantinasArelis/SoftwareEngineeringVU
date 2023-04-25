@@ -5,7 +5,8 @@
 #include <string.h>
 #include "binarySearchTree.h"
 
-//11 uzduotis
+// 11 uzduotis
+// Konstantinas Arelis 3gr
 /*
 this program simulates a libary operating on 3 organisational models:
 1. unordered linear libary
@@ -25,10 +26,13 @@ void PrintStartingValues(float visitorChance[],float bookCompareTime,float bookE
 void UpdateEmployeeRecord(int *employeeRecord,int employeeOccupancy[]);
 void InitializeTimetable(int visitorTimeTable[][60], float visitorChance[]);
 void GenerateRandomBookID(float bookExistanceChance, int *randomBookID);
-void InitializeBookArray(char UnorderedBookArray[][MAX_BOOK_NAME_LENGHT], char OrderedBookArray[][MAX_BOOK_NAME_LENGHT], struct node** bookBinaryTree);
-float GetOrderedSearchTime(float bookCompareTime, char bookName[MAX_BOOK_NAME_LENGHT], char OrderedBookArray[BOOK_AMOUNT][MAX_BOOK_NAME_LENGHT]);
-float GetUnorderedSearchTime(float bookCompareTime, char bookName[MAX_BOOK_NAME_LENGHT], char UnorderedBookArray[BOOK_AMOUNT][MAX_BOOK_NAME_LENGHT]);
+void InitializeBookBinaryTree(struct node** bookBinaryTree);
+float GetOrderedSearchTime(float bookCompareTime, char bookName[MAX_BOOK_NAME_LENGHT]);
+float GetUnorderedSearchTime(float bookCompareTime, char bookName[MAX_BOOK_NAME_LENGHT]);
 float GetBinaryTreeSearchTime(float bookCompareTime, char bookName[MAX_BOOK_NAME_LENGHT], struct node* bookBinaryTree);
+void UpdateBookName(int randomBookID, char bookName[MAX_BOOK_NAME_LENGHT]);
+
+
 
 // initializes the starting values to the according specifications:
 // bookCompareTime time 0.1 - 1
@@ -40,13 +44,12 @@ void InitializeStartingValues(float *bookCompareTime, float visitorChance[], flo
         visitorChance[i] = (rand()%99+1)/100.0;
     }
     *bookExistanceChance = (rand()%9+1)/10.0;
-    //*bookCompareTime=0.1;
+    //*bookCompareTime=1;
     //*bookExistanceChance=0.1;
 }
 
-//subtracks 1 hour of every employee occupancy (to be called every hour change of simulation)
+// subtracks 1 hour of every employee occupancy (to be called every hour change of simulation)
 void UpdateEmployeeOccupancy(int employeeOccupancy[]){
-    //PrintEmployeeOccupancy(employeeOccupancy);
     for(size_t i=0;i<MAX_EMPLOYEE_AMOUNT;i++){
         employeeOccupancy[i]-=1;
         if(employeeOccupancy[i]<0){
@@ -73,7 +76,7 @@ void PrintStartingValues(float visitorChance[],float bookCompareTime,float bookE
         printf("%.2f ",visitorChance[i]);
     }
     printf("\n");
-    //printf("When no book is found, search time %.2f\n",BOOK_AMOUNT*bookCompareTime/60);
+    // printf("When no book is found, search time %.2f\n",BOOK_AMOUNT*bookCompareTime/60);
 }
 
 // updates the maximum amount of employees currently working
@@ -136,53 +139,56 @@ void GenerateRandomBookID(float bookExistanceChance, int *randomBookID){
 }
 
 // initializes arrays with book title data
-void InitializeBookArray(char UnorderedBookArray[][MAX_BOOK_NAME_LENGHT], char OrderedBookArray[][MAX_BOOK_NAME_LENGHT], struct node** bookBinaryTree){
-    FILE *UnorderedBookPtr = fopen("bookListUnsorted2.txt","r");
-    FILE *OrderedBookPtr = fopen("bookListSorted2.txt","r");
-    if(UnorderedBookPtr == NULL || OrderedBookPtr == NULL){
+void InitializeBookBinaryTree(struct node** bookBinaryTree){
+    FILE *OrderedBookPtr = fopen(INPUT_FILE_ORDERED,"r");
+    char temp[MAX_BOOK_NAME_LENGHT];
+    if(OrderedBookPtr == NULL){
         printf("Could not open input files\n");
         exit(0);
     }
 
-    for(size_t i=0;i<BOOK_AMOUNT;i++){
-        fgets(UnorderedBookArray[i], MAX_BOOK_NAME_LENGHT, UnorderedBookPtr);
-    }
-
-    for(size_t i=0;i<BOOK_AMOUNT;i++){
-        fgets(OrderedBookArray[i], MAX_BOOK_NAME_LENGHT, OrderedBookPtr);
-    }
-
-    *bookBinaryTree = insert(*bookBinaryTree, OrderedBookArray[0]);
+    fgets(temp,MAX_BOOK_NAME_LENGHT,OrderedBookPtr);
+    *bookBinaryTree = insert(*bookBinaryTree, temp);
     for(size_t i=1;i<BOOK_AMOUNT;i++){
-        insert(*bookBinaryTree, OrderedBookArray[i]);
+        fgets(temp,MAX_BOOK_NAME_LENGHT,OrderedBookPtr);
+        insert(*bookBinaryTree, temp);
     }
 
-    fclose(UnorderedBookPtr);
     fclose(OrderedBookPtr);
 }
 
 // returns amount of minutes to find book in ordered search
-float GetOrderedSearchTime(float bookCompareTime, char bookName[MAX_BOOK_NAME_LENGHT], char OrderedBookArray[BOOK_AMOUNT][MAX_BOOK_NAME_LENGHT]){
+float GetOrderedSearchTime(float bookCompareTime, char bookName[MAX_BOOK_NAME_LENGHT]){
+    FILE *orderedBookPtr = fopen(INPUT_FILE_ORDERED,"r");
+    char temp[MAX_BOOK_NAME_LENGHT];
     float searchTime=0;
     for(size_t i=0;i<BOOK_AMOUNT;i++){
         searchTime+=bookCompareTime;
-        if(bookName[0]<OrderedBookArray[i][0] || memcmp(bookName,OrderedBookArray[i],MAX_BOOK_NAME_LENGHT)==0){
+        fgets(temp,MAX_BOOK_NAME_LENGHT,orderedBookPtr);
+        if(bookName[0]<temp[0] || memcmp(bookName,temp,MAX_BOOK_NAME_LENGHT)==0){
+            fclose(orderedBookPtr);
             return searchTime;
         }
     }
+    fclose(orderedBookPtr);
     return searchTime;
 }
 
 // returns amount of minutes to find book in unordered search
 // In other words, it returns bookCompareTime*randomBookID
-float GetUnorderedSearchTime(float bookCompareTime, char bookName[MAX_BOOK_NAME_LENGHT], char UnorderedBookArray[BOOK_AMOUNT][MAX_BOOK_NAME_LENGHT]){
+float GetUnorderedSearchTime(float bookCompareTime, char bookName[MAX_BOOK_NAME_LENGHT]){
+    FILE *UnorderedBookPtr = fopen(INPUT_FILE_UNORDERED,"r");
     float searchTime=0;
+    char temp[MAX_BOOK_NAME_LENGHT];
     for(size_t i=0;i<BOOK_AMOUNT;i++){
         searchTime+=bookCompareTime;
-        if(memcmp(bookName,UnorderedBookArray[i],MAX_BOOK_NAME_LENGHT)==0){
+        fgets(temp,MAX_BOOK_NAME_LENGHT,UnorderedBookPtr);
+        if(memcmp(bookName,temp,MAX_BOOK_NAME_LENGHT)==0){
+            fclose(UnorderedBookPtr);
             return searchTime;
         }
     }
+    fclose(UnorderedBookPtr);
     return searchTime;
 }
 
@@ -193,6 +199,24 @@ float GetBinaryTreeSearchTime(float bookCompareTime, char bookName[MAX_BOOK_NAME
     return compareAmount*bookCompareTime;
 }
 
+// updates the book name according to book ID
+void UpdateBookName(int randomBookID, char bookName[MAX_BOOK_NAME_LENGHT]){
+    FILE *UnorderedBookPtr = fopen(INPUT_FILE_ORDERED,"r");
+    if(UnorderedBookPtr == NULL){
+        printf("Could not open input files\n");
+        exit(0);
+    }
+
+    for(size_t i=0;i<BOOK_AMOUNT;i++){
+        if(fgets(bookName, MAX_BOOK_NAME_LENGHT, UnorderedBookPtr)!= NULL & i==randomBookID){
+            return;
+        }
+    }
+
+
+    fclose(UnorderedBookPtr);
+}
+
 int main(){
     float bookCompareTime;
     float visitorChance[LIBARY_OPEN_TIME];
@@ -200,8 +224,6 @@ int main(){
     int randomBookID;
     int visitorTimeTable[LIBARY_OPEN_TIME][60]={0};
     int newVisitorAmount;
-    char UnorderedBookArray[BOOK_AMOUNT][MAX_BOOK_NAME_LENGHT];
-    char OrderedBookArray[BOOK_AMOUNT][MAX_BOOK_NAME_LENGHT];
     char bookName[MAX_BOOK_NAME_LENGHT];
     struct node* bookBinaryTree = NULL;
     
@@ -218,7 +240,7 @@ int main(){
     InitializeStartingValues(&bookCompareTime,visitorChance,&bookExistanceChance);
     PrintStartingValues(visitorChance, bookCompareTime, bookExistanceChance);
     InitializeTimetable(visitorTimeTable,visitorChance);
-    InitializeBookArray(UnorderedBookArray, OrderedBookArray, &bookBinaryTree);
+    InitializeBookBinaryTree(&bookBinaryTree);
     PrintTimetable(visitorTimeTable,1);
     //inorder(bookBinaryTree); //print binary tree
 
@@ -240,13 +262,13 @@ int main(){
             newVisitorAmount=visitorTimeTable[i][j];
             for(size_t k=0;k<newVisitorAmount;k++){
                 GenerateRandomBookID(bookExistanceChance, &randomBookID);
-                memcpy(bookName,OrderedBookArray[randomBookID],MAX_BOOK_NAME_LENGHT);
+                UpdateBookName(randomBookID, bookName);
 
                 // unordered linear search
                 // update how much employee works
                 for(size_t k=0;k<MAX_EMPLOYEE_AMOUNT;k++){
                     if(employeeOccupancyUnorderedSearch[k]==0){
-                        employeeOccupancyUnorderedSearch[k]=GetUnorderedSearchTime(bookCompareTime, bookName, OrderedBookArray);
+                        employeeOccupancyUnorderedSearch[k]=GetUnorderedSearchTime(bookCompareTime, bookName);
                         break;
                     }
                 }
@@ -255,7 +277,7 @@ int main(){
                 // update how much employee works
                 for(size_t k=0;k<MAX_EMPLOYEE_AMOUNT;k++){
                     if(employeeOccupancyOrderedSearch[k]==0){
-                        employeeOccupancyOrderedSearch[k]= GetOrderedSearchTime(bookCompareTime, bookName, OrderedBookArray);
+                        employeeOccupancyOrderedSearch[k]= GetOrderedSearchTime(bookCompareTime, bookName);
                         break;
                     }
                 }
@@ -284,6 +306,6 @@ int main(){
     printf("Ordered search employee record: %d\n",employeeRecordOrderedSearch);
     printf("Binary tree search employee record: %d\n",employeeRecordBinarySearch);
     deleteTree(bookBinaryTree);
-    
+
     return 0;
 }
