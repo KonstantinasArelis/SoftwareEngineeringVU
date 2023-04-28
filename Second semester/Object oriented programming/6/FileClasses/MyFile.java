@@ -9,9 +9,17 @@ public abstract class MyFile implements FileFunctionality{
     protected File filePath;
     protected long fileSize = 0;
 
+    
     public MyFile(String path){
         this.filePath = new File(path);
         this.fileSize = filePath.length();
+    }
+
+    public void setFileSize(long size){//pakeist
+        this.fileSize=size;
+        //return fileSize;
+        //System.out.println("File path: " + filePath.toString());
+        //System.out.println("File size: " + fileSize + " bytes");
     }
 
     @Override

@@ -10,28 +10,11 @@ import java.io.FileNotFoundException;
 import java.io.*;
 import java.io.File;
 
-class FileSize{
-    long size;
-    String measurment;
-
-    public FileSize(){
-            this.size = 0;
-            this.measurment = "B";
-    }
-
-    public FileSize(long size1, String measurment1){
-        this.size = size1;
-        this.measurment = measurment1;
-}
-} 
-
 // Regular class implementing the Text File interface
 public class TxtFile extends MyFile implements TextFileFunctionality, Cloneable {
     protected String encoding = "Unknown";
     private String fileContents;
-    public FileSize size = new FileSize();
-    
-    
+
     public TxtFile(String path) throws IOException {
         super(path);
         this.fileContents = readFileContents(filePath.toString());
@@ -43,19 +26,6 @@ public class TxtFile extends MyFile implements TextFileFunctionality, Cloneable 
         }
          */
         
-    }
-    
-    public void setFileSize(long sizeOfFile, String measurmentOfFile){
-        size.size=sizeOfFile;
-        size.measurment=measurmentOfFile;
-    }
-    
-    public long getFileSize(){
-        return size.size;
-    }
-
-    public String getFilemeasurment(){
-        return size.measurment;
     }
 
     @Override
@@ -149,17 +119,14 @@ public class TxtFile extends MyFile implements TextFileFunctionality, Cloneable 
         }
     }
 
-     @Override
+    @Override
     public  TxtFile clone() throws CloneNotSupportedException{
         try {
             TxtFile t = (TxtFile)super.clone();
-
-            
-            //t.fileContents = new String(this.fileContents); // deep copy
-           //t.encoding = new String(this.encoding);
-           //t.filePath = new File(this.filePath.toString());
-           //t.size = new FileSize(this.size.size, this.size.measurment);
-
+           // Clone points
+           //t.encoding = (String) encoding.clone();
+           t.fileContents = new String(this.fileContents); // deep copy of fileContents
+           t.encoding = new String(this.encoding); // deep copy of fileContents
            return t;
         }
         catch (CloneNotSupportedException exc) {
