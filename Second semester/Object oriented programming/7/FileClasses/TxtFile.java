@@ -1,15 +1,20 @@
 package FileClasses;
 
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.FileInputStream;
 
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
 // Regular class implementing the Text File interface
-public class TxtFile extends MyFile implements TextFileFunctionality{
+public class TxtFile extends MyFile implements TextFileFunctionality, Serializable{
     public String encoding = "Unknown";
     
+    public TxtFile() {
+        super();
+    }
+
     public TxtFile(String path){
         super(path);
         try {

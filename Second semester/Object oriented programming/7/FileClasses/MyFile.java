@@ -3,8 +3,12 @@ import java.io.File;
 
 // Abstract class implementing the general File interface
 public abstract class MyFile implements FileFunctionality{
-    final protected File filePath;
+    protected File filePath;
     protected long fileSize = 0;
+
+    public MyFile(){
+
+    }
 
     public MyFile(String path){
         this.filePath = new File(path);

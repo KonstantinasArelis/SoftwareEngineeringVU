@@ -1,9 +1,15 @@
 package FileClasses;
 
+import java.io.Serializable;
+
 // Regular class implementing the Text File interface
-public class ExeFile extends MyFile implements ExeFileFunctionality{
+public class ExeFile extends MyFile implements ExeFileFunctionality, Serializable{
     public String permissions = "Unknown";
     
+    public ExeFile(){
+        super();
+    }
+
     public ExeFile(String path){
         super(path);
         try {
