@@ -1,38 +1,60 @@
-import FileClasses.TxtFile;
-import FileClasses.ExeFile;
+import FileClasses.TextFile;
+import FileClasses.ExecutableFile;
 import FileClasses.Load;
+import FileClasses.NonExistantFileException;
 import FileClasses.Save;
-
-import java.io.*;
-
-//import FileClasses.*;
+//import com.mpatric.mp3agic.*;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
 
-        String textFilePath = "/Users/kostasarelis/Desktop/SoftwareEngineeringVU/Second semester/Object oriented programming/7/text.txt";
-        String exeFilePath = "/Users/kostasarelis/Desktop/SoftwareEngineeringVU/Second semester/Object oriented programming/7/exec.exe";
+        String macOsTextFilePath = "/Users/kostasarelis/Desktop/SoftwareEngineeringVU/Second semester/Object oriented programming/7/text.txt";
+        String macOsExeFilePath = "/Users/kostasarelis/Desktop/SoftwareEngineeringVU/Second semester/Object oriented programming/7/exec.exe";
+        String windowsTextFilePath = "C:\\Users\\rx580\\Desktop\\SoftwareEngineeringVU-1\\Second semester\\Object oriented programming\\7\\text.txt";
+        String windowsExeFilePath = "C:\\Users\\rx580\\Desktop\\SoftwareEngineeringVU-1\\Second semester\\Object oriented programming\\7\\exec.exe";
+        TextFile textFile = null;
+        ExecutableFile exeFile = null;
+        try{
+            textFile = new TextFile(windowsTextFilePath);
+            exeFile = new ExecutableFile(windowsExeFilePath); 
+        } catch (NonExistantFileException e){
+            System.out.println("No file found");
+        }
 
-        TxtFile textFile = new TxtFile(textFilePath);
-        ExeFile exeFile = new ExeFile(exeFilePath);
+        System.out.println("Before serialisation: ");
+        System.out.println("Text file: ");
+        System.out.println("Size: " + textFile.fileSize);
+        System.out.println("Is file hidden: " + textFile.isHidden);
+        System.out.println("File extension: " + textFile.fileExtension);
+        System.out.println("Before serialisation: ");
+        System.out.println("Exe file: ");
+        System.out.println("Size: " + exeFile.fileSize);
+        System.out.println("Is file hidden: " + exeFile.isHidden);
+        System.out.println("File extension: " + exeFile.fileExtension);
 
-        System.out.println("Encoding: " + textFile.encoding);
-        System.out.println("Permissions: " + exeFile.permissions);
-        
-        // kitoje klaseje
+
         Save save = new Save(textFile, exeFile);
         Thread thread = new Thread(save);
         thread.start();
-        
-        /* 
-        while(thread.isAlive()){
-            // wait for saving to complete
-        }
-        */
+
         
         thread.join();
         Load Load = new Load(textFile, exeFile);
         thread = new Thread(Load);
         thread.start();
+
+        
+        thread.join();
+        System.out.println("");
+            System.out.println("After serialisation: ");
+            System.out.println("Text file: ");
+            System.out.println("Size: " + textFile.fileSize);
+            System.out.println("Is file hidden: " + textFile.isHidden);
+            System.out.println("File extension: " + textFile.fileExtension);
+            System.out.println("Before serialisation: ");
+            System.out.println("Exe file: ");
+            System.out.println("Size: " + exeFile.fileSize);
+            System.out.println("Is file hidden: " + exeFile.isHidden);
+            System.out.println("File extension: " + exeFile.fileExtension);
     }
 }

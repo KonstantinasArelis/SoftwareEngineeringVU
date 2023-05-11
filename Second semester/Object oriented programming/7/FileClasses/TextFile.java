@@ -7,15 +7,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
-// Regular class implementing the Text File interface
-public class TxtFile extends MyFile implements TextFileFunctionality, Serializable{
+
+public class TextFile extends MyFile implements TextFileFunctionality, Serializable{
     public String encoding = "Unknown";
     
-    public TxtFile() {
+    public TextFile() {
         super();
     }
 
-    public TxtFile(String path){
+    public TextFile(String path) throws NonExistantFileException{
         super(path);
         try {
             this.encoding = getEncoding();

@@ -1,19 +1,17 @@
 package FileClasses;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class Save implements Serializable, Runnable{
 
-    TxtFile txtFile;
-    ExeFile exeFile;
+    TextFile txtFile;
+    ExecutableFile exeFile;
 
-    public Save(TxtFile txtFile, ExeFile exeFile) {
+    public Save(TextFile txtFile, ExecutableFile exeFile) {
         this.txtFile = txtFile;
         this.exeFile = exeFile;
     }

@@ -4,21 +4,29 @@ import java.io.File;
 // Abstract class implementing the general File interface
 public abstract class MyFile implements FileFunctionality{
     protected File filePath;
-    protected long fileSize = 0;
+    public long fileSize = 0;
+    public boolean isHidden;
+    public String fileExtension;
+
 
     public MyFile(){
 
     }
 
-    public MyFile(String path){
+    public MyFile(String path) throws NonExistantFileException{
         this.filePath = new File(path);
-        this.fileSize = filePath.length();
-    }
 
-    @Override
-    public long getFileSize(){//pakeist
-        return fileSize;
-        //System.out.println("File path: " + filePath.toString());
-        //System.out.println("File size: " + fileSize + " bytes");
+        if(filePath.exists()){
+            int i = filePath.getName().lastIndexOf('.');
+            if (i > 0) {
+                this.fileExtension = filePath.getName().substring(i+1);
+            }
+
+            this.isHidden = filePath.isHidden();
+            this.fileSize = filePath.length();
+
+        } else {
+            throw new NonExistantFileException("The file does not exist",this.filePath.toString());
+        }
     }
 }
