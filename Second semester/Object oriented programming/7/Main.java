@@ -93,3 +93,8 @@ public class Main {
             System.out.println("\talbum: " + musicFile.album);
     }
 }
+
+
+//javac -d ClassFiles -cp ".;com" FileClasses/*.java Main.java com/mpatric/mp3agic/*.java
+
+//java -cp ClassFiles Main 
