@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 // Abstract class implementing the general File interface
 public abstract class MyFile implements FileFunctionality, Serializable{
-    protected File filePath;
+    public File filePath;
     public long fileSize = 0;
     public boolean isHidden;
     public String fileExtension;

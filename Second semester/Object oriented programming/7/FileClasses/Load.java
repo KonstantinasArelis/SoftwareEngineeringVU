@@ -28,7 +28,7 @@ public class Load implements Serializable, Runnable{
             //txtFile = (TextFile) objectInputStream.readObject();
             //exeFile = (ExecutableFile) objectInputStream.readObject();
             //musicFile = (MusicFile) objectInputStream.readObject();
-
+            
             txtFile.update((TextFile) objectInputStream.readObject());
             exeFile.update((ExecutableFile) objectInputStream.readObject());
             musicFile.update((MusicFile) objectInputStream.readObject());

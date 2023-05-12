@@ -1,9 +1,8 @@
 package FileClasses;
 
-import java.io.Serializable;
 
 // Regular class implementing the Text File interface
-public class ExecutableFile extends MyFile implements ExecutableFileFunctionality, Serializable{
+public class ExecutableFile extends MyFile implements ExecutableFileFunctionality{
     public String permissions = "Unknown";
     
     public ExecutableFile(){
@@ -51,9 +50,12 @@ public class ExecutableFile extends MyFile implements ExecutableFileFunctionalit
     }
 
     public void update(ExecutableFile newExeFile){
-        fileSize = newExeFile.fileSize;
-        isHidden = newExeFile.isHidden;
-        fileExtension = newExeFile.fileExtension;
-        permissions = newExeFile.permissions;
+        if(newExeFile != null){
+            filePath = newExeFile.filePath;
+            fileSize = newExeFile.fileSize;
+            isHidden = newExeFile.isHidden;
+            fileExtension = newExeFile.fileExtension;
+            permissions = newExeFile.permissions;
+        }
     }
 }

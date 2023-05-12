@@ -2,10 +2,9 @@ package FileClasses;
 
 import java.io.IOException;
 //import com.mpatric.mp3agic.*;
-import java.io.Serializable;
 import com.mpatric.mp3agic.*;
 
-public class MusicFile extends MyFile implements Serializable, MusicFileFunctionality{
+public class MusicFile extends MyFile implements MusicFileFunctionality{
     public String track; // ID3v1 
     public String artist; // ID3v1
     public String title; // ID3v1
@@ -148,11 +147,14 @@ public class MusicFile extends MyFile implements Serializable, MusicFileFunction
     }
 
     public void update(MusicFile newMusicFile){
-        fileSize = newMusicFile.fileSize;
-        isHidden = newMusicFile.isHidden;
-        fileExtension = newMusicFile.fileExtension;
-        artist = newMusicFile.artist;
-        title = newMusicFile.title;
-        album = newMusicFile.album;
+        if(newMusicFile != null){
+            filePath = newMusicFile.filePath;
+            fileSize = newMusicFile.fileSize;
+            isHidden = newMusicFile.isHidden;
+            fileExtension = newMusicFile.fileExtension;
+            artist = newMusicFile.artist;
+            title = newMusicFile.title;
+            album = newMusicFile.album;
+        }
     }
 }
