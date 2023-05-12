@@ -58,4 +58,12 @@ public class TextFile extends MyFile implements TextFileFunctionality, Serializa
         }
         }
     }
+
+    public void update(TextFile newTextFile){
+        fileSize = newTextFile.fileSize;
+        isHidden = newTextFile.isHidden;
+        fileExtension = newTextFile.fileExtension;
+        encoding = newTextFile.encoding;
+    }
+
 }

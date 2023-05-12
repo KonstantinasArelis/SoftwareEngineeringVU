@@ -10,10 +10,12 @@ public class Save implements Serializable, Runnable{
 
     TextFile txtFile;
     ExecutableFile exeFile;
+    MusicFile musicFile;
 
-    public Save(TextFile txtFile, ExecutableFile exeFile) {
+    public Save(TextFile txtFile, ExecutableFile exeFile, MusicFile musicFile) {
         this.txtFile = txtFile;
         this.exeFile = exeFile;
+        this.musicFile = musicFile;
     }
 
     @Override
@@ -25,6 +27,7 @@ public class Save implements Serializable, Runnable{
 
             objectOutputStream.writeObject(txtFile);
             objectOutputStream.writeObject(exeFile);
+            objectOutputStream.writeObject(musicFile);
             objectOutputStream.flush();
             objectOutputStream.close();
             

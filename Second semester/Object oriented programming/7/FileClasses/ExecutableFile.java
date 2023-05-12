@@ -49,4 +49,11 @@ public class ExecutableFile extends MyFile implements ExecutableFileFunctionalit
         }
         return permissions;
     }
+
+    public void update(ExecutableFile newExeFile){
+        fileSize = newExeFile.fileSize;
+        isHidden = newExeFile.isHidden;
+        fileExtension = newExeFile.fileExtension;
+        permissions = newExeFile.permissions;
+    }
 }

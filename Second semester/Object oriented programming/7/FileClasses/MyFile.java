@@ -1,8 +1,9 @@
 package FileClasses;
 import java.io.File;
+import java.io.Serializable;
 
 // Abstract class implementing the general File interface
-public abstract class MyFile implements FileFunctionality{
+public abstract class MyFile implements FileFunctionality, Serializable{
     protected File filePath;
     public long fileSize = 0;
     public boolean isHidden;
@@ -29,4 +30,5 @@ public abstract class MyFile implements FileFunctionality{
             throw new NonExistantFileException("The file does not exist",this.filePath.toString());
         }
     }
+    
 }
