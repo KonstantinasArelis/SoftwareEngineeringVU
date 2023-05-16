@@ -4,36 +4,63 @@
 #include <string.h>
 
 // 6. The program finds out if a person can get a loan from another person using DFS search.
-// A person A can get a loan from B they did A did a favor for B, or if B did a favor for someone else and so on.
-
+// Far lender: person A can get a loan from B they did A did a favor for B, or if B did a favor for someone else and so on.
+// Neaer lender: person A canget loan from  B they did A did a favor for B, or if B did a favor for C, then A can get loan from C.
 #define MAX_VERTICES 20
 #define MAX_NAME_SIZE 255
 
-void DFS(int graph[MAX_VERTICES][MAX_VERTICES], bool visited[MAX_VERTICES], char people[][MAX_NAME_SIZE], int vertex, int searchedVertex);
-int findBorrower(int graph[MAX_VERTICES][MAX_VERTICES], bool visited[MAX_VERTICES], char people[][MAX_NAME_SIZE], char *source, char *destination);
+// Linked list node structure
+typedef struct ListNode {
+    int vertex;
+    struct ListNode* next;
+} ListNode;
+
+void DFS(int graph[MAX_VERTICES][MAX_VERTICES], bool visited[MAX_VERTICES], char people[][MAX_NAME_SIZE], ListNode* neighbors[],  int vertex, int searchedVertex);
+int FindFarLender(int graph[MAX_VERTICES][MAX_VERTICES], bool visited[MAX_VERTICES], char people[][MAX_NAME_SIZE], ListNode* neighbors[], char *source, char *destination);
+int FindNearLender(int graph[MAX_VERTICES][MAX_VERTICES], bool visited[MAX_VERTICES], char people[][MAX_NAME_SIZE], ListNode* neighbors[], char *source, char *destination);
 void addVertex(char *name, char people[][MAX_NAME_SIZE]);
 void addEdge(int graph[][MAX_VERTICES],char people[][MAX_NAME_SIZE], char *source, char *destination);
 void testCase1();
 void testCase2();
 
 int result;
+
+// Function to create a new linked list node
+ListNode* createNode(int vertex)
+{
+    ListNode* newNode = (ListNode*)malloc(sizeof(ListNode));
+    newNode->vertex = vertex;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to insert a node at the beginning of a linked list
+void insertNode(ListNode** head, int vertex)
+{
+    ListNode* newNode = createNode(vertex);
+    newNode->next = *head;
+    *head = newNode;
+}
+
 // Function to perform DFS
-void DFS(int graph[MAX_VERTICES][MAX_VERTICES], bool visited[MAX_VERTICES], char people[][MAX_NAME_SIZE], int vertex, int searchedVertex)
+void DFS(int graph[MAX_VERTICES][MAX_VERTICES], bool visited[MAX_VERTICES], char people[][MAX_NAME_SIZE], ListNode* neighbors[],  int vertex, int searchedVertex)
 {
     visited[vertex] = true;
     printf("%s -> ", people[vertex]);  // Print the visited vertex
     if(vertex == searchedVertex){
         result = 1;
-        //exit(0);
     }
     for (int i = 0; i < MAX_VERTICES; i++) {
+        if (graph[vertex][i] == 1) {
+            insertNode(&neighbors[vertex], i);
+        }
         if (graph[vertex][i] == 1 && !visited[i]) {
-            DFS(graph, visited, people, i, searchedVertex);  // Recursively explore adjacent unvisited vertices
+            DFS(graph, visited, people, neighbors, i, searchedVertex);  // Recursively explore adjacent unvisited vertices
         }
     }
 }
 
-int findBorrower(int graph[MAX_VERTICES][MAX_VERTICES], bool visited[MAX_VERTICES], char people[][MAX_NAME_SIZE], char *source, char *destination){
+int FindFarLender(int graph[MAX_VERTICES][MAX_VERTICES], bool visited[MAX_VERTICES], char people[][MAX_NAME_SIZE], ListNode* neighbors[], char *source, char *destination){
     int startingVertex = -1;
     int searchedVertex = -1;
     result = -1;
@@ -50,8 +77,53 @@ int findBorrower(int graph[MAX_VERTICES][MAX_VERTICES], bool visited[MAX_VERTICE
     if(startingVertex == -1 || searchedVertex == -1){
         return -1;
     }
-    DFS(graph, visited, people, startingVertex, searchedVertex);
+    DFS(graph, visited, people, neighbors, startingVertex, searchedVertex);
     printf("\n");
+
+    return result;
+}
+
+int FindNearLender(int graph[MAX_VERTICES][MAX_VERTICES], bool visited[MAX_VERTICES], char people[][MAX_NAME_SIZE], ListNode* neighbors[], char *source, char *destination){
+    int startingVertex = -1;
+    int searchedVertex = -1;
+    result = -1;
+    for(size_t i=0;i<MAX_VERTICES;i++){
+        if(strcmp(people[i], source) == 0){
+            startingVertex = i; 
+        }
+    }
+    for(size_t i=0;i<MAX_VERTICES;i++){
+        if(strcmp(people[i], destination) == 0){
+            searchedVertex = i; 
+        }
+    }
+    if(startingVertex == -1 || searchedVertex == -1){
+        return -1;
+    }
+    DFS(graph, visited, people, neighbors, startingVertex, searchedVertex);
+    printf("\n");
+
+    result = -1;
+    printf("Neighbors of %s: \n", people[startingVertex]);
+    ListNode* curr = neighbors[startingVertex];
+    while (curr != NULL) {
+        ListNode* curr2 = neighbors[curr->vertex];
+        if(curr->vertex == searchedVertex){
+            result = 1;
+        }
+        printf("\t%s: \n", people[curr->vertex]);
+        while (curr2 != NULL) {
+            if(curr2->vertex == searchedVertex){
+                result = 1;
+            }
+            printf("\t\t%s \n", people[curr2->vertex]);
+            curr2 = curr2->next;
+        }
+
+        curr = curr->next;
+    }
+    printf("\n");
+
     return result;
 }
 
@@ -98,8 +170,8 @@ void testCase1(){
     char people[MAX_VERTICES][MAX_NAME_SIZE] = {0};
     int graph[MAX_VERTICES][MAX_VERTICES] = {0};
     bool visited[MAX_VERTICES] = {false};
+    ListNode* neighbors[MAX_VERTICES] = {NULL};
 
-    //example 1
     addVertex("jonas", people);
     addVertex("marijonas", people);
     addVertex("kalafijoras", people);
@@ -120,19 +192,50 @@ void testCase1(){
     addEdge(graph, people, "balionas","raudonas");
     addEdge(graph, people, "raudonas","rajonas");
 
-    printf("DFS traversal from marijonas to raudonas:\n");
-    if(findBorrower(graph,visited, people, "marijonas", "raudonas") == 1){
-        printf("borrowing is allowed\n");
+    printf("\tDFS traversal from marijonas to raudonas:\n\t");
+    if(FindFarLender(graph,visited, people, neighbors, "marijonas", "raudonas") == 1){
+        printf("borrowing from far lender is allowed\n");
     }else{
-        printf("borrowing is not allowed\n");
+        printf("borrowing from far lender is not allowed\n");
     }
-}
+
+    /*
+    for(int i=0;i<8;i++){
+        printf("Neighbors of %d: ", i);
+        ListNode* curr = neighbors[i];
+        while (curr != NULL) {
+            printf("%d ", curr->vertex);
+            curr = curr->next;
+        }
+        printf("\n");
+    }
+    */
+
+   for (int j = 0; j < MAX_VERTICES; j++) {
+            visited[j] = false;
+            ListNode* temp = neighbors[j];
+            while (temp != NULL) {
+                ListNode* next = temp->next;
+                free(temp);
+                temp = next;
+            }
+            neighbors[j] = NULL;
+    }
+
+    printf("\tDFS traversal from marijonas to raudonas:\n\t");
+    if(FindNearLender(graph,visited, people, neighbors, "marijonas", "raudonas") == 1){
+        printf("borrowing from near lender is allowed\n");
+    }else{
+        printf("borrowing from near lender is not allowed\n");
+    }
+}  
 
 void testCase2(){
     char people[MAX_VERTICES][MAX_NAME_SIZE] = {0};
     int graph[MAX_VERTICES][MAX_VERTICES] = {0};
     bool visited[MAX_VERTICES] = {false};
-
+    ListNode* neighbors[MAX_VERTICES] = {NULL};
+    
     //example 2
     addVertex("jonas", people);
     addVertex("marijonas", people);
@@ -159,10 +262,40 @@ void testCase2(){
     addEdge(graph, people, "marijonas","valerijonas");
     addEdge(graph, people, "marijonas","raudonas");
 
-    printf("DFS traversal from marijonas to raudonas:\n");
-    if(findBorrower(graph,visited, people, "marijonas", "raudonas") == 1){
-        printf("borrowing is allowed\n");
+    printf("\tjonas to raudonas:\n\t");
+    if(FindFarLender(graph,visited, people, neighbors, "jonas", "raudonas") == 1){
+        printf("borrowing from far lender is allowed\n");
     }else{
-        printf("borrowing is not allowed\n");
+        printf("borrowing from far lender is not allowed\n");
+    }
+
+    /*
+    for(int i=0;i<8;i++){
+        printf("Neighbors of %d: ", i);
+        ListNode* curr = neighbors[i];
+        while (curr != NULL) {
+            printf("%d ", curr->vertex);
+            curr = curr->next;
+        }
+        printf("\n");
+    }
+    */
+
+   for (int j = 0; j < MAX_VERTICES; j++) {
+            visited[j] = false;
+            ListNode* temp = neighbors[j];
+            while (temp != NULL) {
+                ListNode* next = temp->next;
+                free(temp);
+                temp = next;
+            }
+            neighbors[j] = NULL;
+    }
+
+    printf("\tDFS traversal from jonas to raudonas:\n\t");
+    if(FindNearLender(graph,visited, people, neighbors, "jonas", "raudonas") == 1){
+        printf("borrowing from near lender is allowed\n");
+    }else{
+        printf("borrowing from near lender is not allowed\n");
     }
 }
