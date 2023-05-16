@@ -7,7 +7,7 @@
 // bookListSorted.txt - 211 books
 // bookListSorted2.txt - 10000 books
 // bookListSorted3.txt - 5000 books
-// CHANGE BOOK_AMOUNT WHEN CHANGING INPUT FILES!
+// CHANGE BOOK_AMOUNT WHEN CHANGING INPUT FILES!!!
 
 int compareAmount;
 
