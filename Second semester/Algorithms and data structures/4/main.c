@@ -22,6 +22,8 @@ void addVertex(char *name, char people[][MAX_NAME_SIZE]);
 void addEdge(int graph[][MAX_VERTICES],char people[][MAX_NAME_SIZE], char *source, char *destination);
 void testCase1();
 void testCase2();
+ListNode* createNode(int vertex);
+void insertNode(ListNode** head, int vertex);
 
 int result;
 
