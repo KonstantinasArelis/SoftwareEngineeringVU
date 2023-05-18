@@ -18,11 +18,19 @@ public class MusicFile extends MyFile implements MusicFileFunctionality{
     public String albumArtist; // ID3v2
     public String copyright; // ID3v2
     public String encoder; // ID3v2
-    
+
+    /**
+     * this constructor creates an empty object
+     */
     public MusicFile() {
         super();
     }
 
+    /**
+     * this constructor creates an object representing a music file, also initialises mp3 file tags
+     * @param path complete path to the file
+     * @throws NonExistantFileException thrown when the the file of path does not exist
+     */
     public MusicFile(String path) throws NonExistantFileException{
         super(path);
 
@@ -62,6 +70,10 @@ public class MusicFile extends MyFile implements MusicFileFunctionality{
         }
     }
 
+    /**
+     * this method sets the track tag of an mp3 file
+     * @param newTrack the new tag which is to be applied
+     */
     @Override
     public void setTrack(String newTrack){
         Mp3File mp3file = null;
@@ -97,6 +109,10 @@ public class MusicFile extends MyFile implements MusicFileFunctionality{
         }
     }
 
+    /**
+     * this method sets the title tag of an mp3 file
+     * @param newTitle the new title which is to be set
+     */
     @Override
     public void setTitle(String newTitle){
         Mp3File mp3file = null;
@@ -132,6 +148,10 @@ public class MusicFile extends MyFile implements MusicFileFunctionality{
         }
     }
 
+    /**
+     * this method sets the artist tag of an mp3 file
+     * @param newArtist the new artist tag to be set
+     */
     @Override
     public void setArtist(String newArtist){
         Mp3File mp3file = null;
@@ -167,6 +187,10 @@ public class MusicFile extends MyFile implements MusicFileFunctionality{
         }
     }
 
+    /**
+     * this method sets the album tag of an mp3 file
+     * @param newAlbum is the new album tag to be set
+     */
     @Override
     public void setAlbum(String newAlbum){
         Mp3File mp3file = null;
@@ -202,6 +226,10 @@ public class MusicFile extends MyFile implements MusicFileFunctionality{
         }
     }
 
+    /**
+     * this method sets the year tag of an mp3 file
+     * @param newYear is the new year tag to be set
+     */
     @Override
     public void setYear(String newYear){
         Mp3File mp3file = null;
@@ -237,6 +265,10 @@ public class MusicFile extends MyFile implements MusicFileFunctionality{
         }
     }
 
+    /**
+     * this method sets the lyrics tag of an mp3 file
+     * @param newLyrics is the new lyrics tag to be set
+     */
     @Override
     public void setLyrics(String newLyrics){
         Mp3File mp3file = null;
@@ -272,6 +304,10 @@ public class MusicFile extends MyFile implements MusicFileFunctionality{
         }
     }
 
+    /**
+     * this method sets the composer tag of an mp3 file
+     * @param newComposer is the new composer tag to be set
+     */
     @Override
     public void setComposer(String newComposer){
         Mp3File mp3file = null;
@@ -307,6 +343,10 @@ public class MusicFile extends MyFile implements MusicFileFunctionality{
         }
     }
 
+    /**
+     * this method sets the publisher tag of an mp3 file
+     * @param newPublisher is the new publisher tag to be set
+     */
     @Override
     public void setPublisher(String newPublisher){
         Mp3File mp3file = null;
@@ -342,6 +382,10 @@ public class MusicFile extends MyFile implements MusicFileFunctionality{
         }
     }
 
+    /**
+     * this method sets the original artist tag of an mp3 file
+     * @param newOriginalArtist is the new original artist tag to be set
+     */
     @Override
     public void setOriginalArtist(String newOriginalArtist){
         Mp3File mp3file = null;
@@ -377,6 +421,10 @@ public class MusicFile extends MyFile implements MusicFileFunctionality{
         }
     }
 
+    /**
+     * this method sets the album artist tag of an mp3 file
+     * @param newAlbumArtist is the new album artist tag to be set
+     */
     @Override
     public void setAlbumArtist(String newAlbumArtist){
         Mp3File mp3file = null;
@@ -412,6 +460,10 @@ public class MusicFile extends MyFile implements MusicFileFunctionality{
         }
     }
 
+    /**
+     * this method sets the copyright tag of an mp3 file
+     * @param newCopyright is the new copyright tag to be set
+     */
     @Override
     public void setCopyright(String newCopyright){
         Mp3File mp3file = null;
@@ -447,6 +499,10 @@ public class MusicFile extends MyFile implements MusicFileFunctionality{
         }
     }
 
+    /**
+     * this method sets the encoder tag of an mp3 file
+     * @param newEncoder is the encoder tag to be set
+     */
     @Override
     public void setEncoder(String newEncoder){
         Mp3File mp3file = null;
@@ -482,6 +538,10 @@ public class MusicFile extends MyFile implements MusicFileFunctionality{
         }
     }
 
+    /**
+     * this method updates the passed object to the current object
+     * @param newMusicFile the object to be updated
+     */
     public void update(MusicFile newMusicFile){
         if(newMusicFile != null){
             filePath = newMusicFile.filePath;
