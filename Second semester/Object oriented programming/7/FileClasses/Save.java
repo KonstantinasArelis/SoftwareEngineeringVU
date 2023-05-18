@@ -21,12 +21,6 @@ public class Save implements Serializable, Runnable{
     @Override
     public void run() {
         try {
-            Thread.sleep(100000);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        try {
             FileOutputStream fileOutputStream = new FileOutputStream("yourfile.txt");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(txtFile);
@@ -34,7 +28,6 @@ public class Save implements Serializable, Runnable{
             objectOutputStream.writeObject(musicFile);
             objectOutputStream.flush();
             objectOutputStream.close();
-            
         } catch (FileNotFoundException e) {
             System.out.println("error: File not found exception: " + e.getMessage());
         } catch (IOException e) {
