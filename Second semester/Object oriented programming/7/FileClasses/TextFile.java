@@ -21,7 +21,7 @@ public class TextFile extends MyFile implements TextFileFunctionality {
             this.encoding = getEncoding();
             readTextContents();
         } catch (InvalidFileFormatException e) {
-            System.out.println("getting encoding error ");
+            //System.out.println("getting encoding error ");
         }
     }
 
