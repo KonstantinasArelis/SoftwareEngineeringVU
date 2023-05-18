@@ -12,9 +12,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         // meniu punktas pakeisti txt faila
-        TextFile textFile = null;
-        ExecutableFile exeFile = null;
-        MusicFile musicFile = null;
+        //TextFile textFile = null;
+        //ExecutableFile exeFile = null;
+        //MusicFile musicFile = null;
         
         String macOsTextFilePath = "/Users/kostasarelis/Desktop/SoftwareEngineeringVU/Second semester/Object oriented programming/7/text.txt";
         String macOsExeFilePath = "/Users/kostasarelis/Desktop/SoftwareEngineeringVU/Second semester/Object oriented programming/7/exec.exe";
@@ -29,24 +29,50 @@ public class Main {
         String newTagName;
 
         Scanner myObj = new Scanner(System.in);
-        Thread thread;
+        //Thread thread;
         //Load Load;
         //Save save;
         while(true){
             System.out.println("Meniu: ");
-            System.out.println("\t1. append text file");
-            System.out.println("\t2. display text file ");
+            System.out.println("\t1. printf general directory tree");
+            System.out.println("\t2. printf directory tree of suffix");
             System.out.println("\t3. copy file ");
-            System.out.println("\t4. edit mp3 file tags");
-            System.out.println("\t5. printf general directory tree");
-            System.out.println("\t6. printf directory tree of suffix");
-            System.out.println("\t7. exit ");
-            System.out.println("\t8. display mp3 tags ");
+            System.out.println("\t4. append text file");
+            System.out.println("\t5. display text file ");
+            System.out.println("\t6. edit mp3 file tags");
+            System.out.println("\t7. display mp3 tags ");
+            System.out.println("\t8. run executable file ");
+            System.out.println("\t9. exit ");
             //System.out.println("\t3. load ");
             //System.out.println("\t4. save ");
             String option = myObj.nextLine();
-            
             if(option.equals("1")){
+                System.out.println("Enter directory name: ");
+                inputPath = myObj.nextLine();
+                MyFile.printDirectorytree(inputPath);
+            }
+            else if(option.equals("2")){
+                System.out.println("Enter directory name: ");
+                inputPath = myObj.nextLine();
+                System.out.println("Enter suffix: ");
+                option = myObj.nextLine();
+                MyFile.printDirectorytree(inputPath,option);
+            }
+            else if(option.equals("3")){
+                System.out.println("enter  file path");
+                inputPath = myObj.nextLine();
+                try {
+                    TextFile txtfile = new TextFile(inputPath);
+                    try {
+                        txtfile.copyFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } catch (NonExistantFileException e) {
+                    System.out.println("file cannot be opened");
+                }
+            }
+            else if(option.equals("4")){
                 System.out.println("enter text file path");
                 inputPath = myObj.nextLine();
                 try {
@@ -58,37 +84,7 @@ public class Main {
                     System.out.println("text file cannot be opened");
                 }
             }
-            else if(option.equals("3")){
-                System.out.println("enter  file path");
-                inputPath = myObj.nextLine();
-                try {
-                    TextFile txtfile = new TextFile(inputPath);
-                    try {
-                        txtfile.copyFile();
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                } catch (NonExistantFileException e) {
-                    System.out.println("file cannot be opened");
-                }
-            }
             else if(option.equals("5")){
-                System.out.println("Enter directory name: ");
-                inputPath = myObj.nextLine();
-                MyFile.printDirectorytree(inputPath);
-            }
-            else if(option.equals("6")){
-                System.out.println("Enter directory name: ");
-                inputPath = myObj.nextLine();
-                System.out.println("Enter suffix: ");
-                option = myObj.nextLine();
-                MyFile.printDirectorytree(inputPath,option);
-            }
-            else if(option.equals("7")){
-                System.exit(0);
-            }
-            else if(option.equals("2")){
                 System.out.println("Enter directory name: ");
                 inputPath = myObj.nextLine();
                 try {
@@ -98,7 +94,7 @@ public class Main {
                     System.out.println("file cannot be opened");
                 }
             }
-            else if(option.equals("4")){
+            else if(option.equals("6")){
                 System.out.println("Enter mp3 file name: ");
                 inputPath = myObj.nextLine();
                 try {
@@ -160,7 +156,7 @@ public class Main {
                     System.out.println("No file found for object creation ");
                 }
             }
-            else if(option.equals("8")){
+            else if(option.equals("7")){
                 System.out.println("Enter mp3 file name: ");
                 inputPath = myObj.nextLine();
                 try {
@@ -181,27 +177,27 @@ public class Main {
                     System.out.println("No file found for object creation ");
                 }
             }
+            else if(option.equals("8")){
+                System.out.println("Enter file path: ");
+                inputPath = myObj.nextLine();
+                try {
+                    ExecutableFile exefile = new ExecutableFile(inputPath);
+                    if(exefile.executePermission == true){
+                        exefile.execute();
+                    } else{
+                        System.out.println("No executable permission to execute file");
+                        System.out.println("read: " + exefile.readPermission);
+                        System.out.println("write: " + exefile.writePermission); 
+                        System.out.println("execute: " + exefile.executePermission);  
+                    }
+                } catch (NonExistantFileException e) {
+                    System.out.println("file cannot be opened");
+                }
+            }
+            else if(option.equals("9")){
+                System.exit(0);
+            }
         }
-
-        /* 
-            else if(option.equals("3")){
-
-                textFile = new TextFile();
-                exeFile = new ExecutableFile();
-                musicFile = new MusicFile();
-
-                Load = new Load(textFile, exeFile, musicFile);
-                thread = new Thread(Load);
-                thread.start();
-                thread.join();
-            }
-            else if(option.equals("4")){
-                save = new Save(textFile, exeFile, musicFile);
-                thread = new Thread(save);
-                thread.start();
-            }
-            */
-
     }
 }
 

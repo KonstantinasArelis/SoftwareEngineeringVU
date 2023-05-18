@@ -6,11 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.nio.file.FileAlreadyExistsException;
 
 // Abstract class implementing the general File interface
-public abstract class MyFile implements FileFunctionality, Serializable{
+public abstract class MyFile implements FileFunctionality{
     public File filePath;
     public long fileSize = 0;
     public boolean isHidden;

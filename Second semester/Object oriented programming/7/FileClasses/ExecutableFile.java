@@ -1,10 +1,12 @@
 package FileClasses;
 
+import java.io.IOException;
 
 // Regular class implementing the Text File interface
 public class ExecutableFile extends MyFile implements ExecutableFileFunctionality{
-    public String permissions = "Unknown";
-    
+    public boolean readPermission;
+    public boolean writePermission;
+    public boolean executePermission;
     public ExecutableFile(){
         super();
     }
@@ -12,41 +14,53 @@ public class ExecutableFile extends MyFile implements ExecutableFileFunctionalit
     public ExecutableFile(String path) throws NonExistantFileException{
         super(path);
         try {
-            this.permissions = getPermissions();
+            this.updatePermissions();
         } catch (InvalidFileFormatException e) {
             System.out.println("getting permissions error ");
         }
     }
 
     @Override
-    public String getPermissions() throws InvalidFileFormatException{
-        String permissions = "None Set";
+    public void updatePermissions() throws InvalidFileFormatException{
         if(!this.filePath.toString().endsWith(".exe")){
             throw new InvalidFileFormatException("Cant get permissions of a not .exe file",this.filePath.toString());
         }else{
             if (filePath.exists()) {
-                permissions="";
                 if(filePath.canExecute()){
-                    permissions = permissions + "e";
+                    readPermission = true;
                 }else{
-                    permissions = permissions + "-";
+                    readPermission = false;
                 }
                 if(filePath.canRead()){
-                    permissions = permissions + "r";
+                    readPermission = true;
                 }else{
-                    permissions = permissions + "-";
+                    readPermission = false;
                 }
                 if(filePath.canWrite()){
-                    permissions = permissions + "w";
+                    writePermission = true;
                 }else{
-                    permissions = permissions + "-";
+                    writePermission = false;
                 }
             }
             else {
                 System.out.println("Executable does not exist");
             }
         }
-        return permissions;
+    }
+
+    public void execute() {
+        try {
+            // Construct the command to execute the file with the provided arguments
+            String command = filePath.toString();
+
+            // Execute the command using the operating system's command line
+            Process process = Runtime.getRuntime().exec(command);
+
+            // Wait for the process to finish
+            process.waitFor();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void update(ExecutableFile newExeFile){
@@ -55,7 +69,9 @@ public class ExecutableFile extends MyFile implements ExecutableFileFunctionalit
             fileSize = newExeFile.fileSize;
             isHidden = newExeFile.isHidden;
             fileExtension = newExeFile.fileExtension;
-            permissions = newExeFile.permissions;
+            readPermission = newExeFile.readPermission;
+            writePermission = newExeFile.writePermission;
+            executePermission = newExeFile.executePermission;
         }
     }
 }
