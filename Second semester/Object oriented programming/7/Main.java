@@ -1,15 +1,18 @@
 import FileClasses.TextFile;
 import FileClasses.ExecutableFile;
+import FileClasses.Load;
 import FileClasses.MusicFile;
 import FileClasses.NonExistantFileException;
-import FileClasses.MyFile;
-import java.util.ArrayList;
-import java.util.List;
-import java.io.IOException;
+import FileClasses.Save;
+
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
+        // meniu punktas pakeisti txt faila
+        TextFile textFile = null;
+        ExecutableFile exeFile = null;
+        MusicFile musicFile = null;
         
         String macOsTextFilePath = "/Users/kostasarelis/Desktop/SoftwareEngineeringVU/Second semester/Object oriented programming/7/text.txt";
         String macOsExeFilePath = "/Users/kostasarelis/Desktop/SoftwareEngineeringVU/Second semester/Object oriented programming/7/exec.exe";
@@ -21,218 +24,165 @@ public class Main {
 
         String inputPath;
         String comment;
-        String newTagName;
-        String option;
-        Scanner myObj = new Scanner(System.in);
+        
 
+        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+        Thread thread;
+        Load Load;
+        Save save;
         while(true){
             System.out.println("Meniu: ");
-            System.out.println("\t1. printf general directory tree");
-            System.out.println("\t2. printf directory tree of suffix");
-            System.out.println("\t3. copy file/s ");
-            System.out.println("\t4. delete file/s ");
-            System.out.println("\t5. append text file");
-            System.out.println("\t6. display text file ");
-            System.out.println("\t7. edit mp3 file tags");
-            System.out.println("\t8. display mp3 tags ");
-            System.out.println("\t9. run executable file ");
-            System.out.println("\t10. exit ");
+            System.out.println("\t1. open file ");
+            System.out.println("\t2. exit ");
+            System.out.println("\t3. load ");
+            System.out.println("\t4. save ");
+            System.out.println("\t5. edit file ");
+            String option = myObj.nextLine();  // Read user input
 
-            option = myObj.nextLine();
-            if(option.equals("1")){
-                System.out.println("Enter directory name: ");
-                inputPath = myObj.nextLine();
-                MyFile.printDirectorytree(inputPath);
-            }
-            else if(option.equals("2")){
-                System.out.println("Enter directory name: ");
-                inputPath = myObj.nextLine();
-                System.out.println("Enter suffix: ");
-                option = myObj.nextLine();
-                MyFile.printDirectorytree(inputPath,option);
+            if(option.equals("5")){
+                if(textFile!= null && textFile.filePath != null){
+                    System.out.println("\t 1." + textFile.filePath.toString());
+                }
+                if(exeFile!= null && exeFile.filePath != null){
+                    System.out.println("\t 2." + exeFile.filePath.toString());
+                }
+                if(musicFile!= null && musicFile.filePath != null){
+                    System.out.println("\t 3." + musicFile.filePath.toString());
+                }
+                option = myObj.nextLine();  // Read user input
+                if(option.equals("1")){
+                    System.out.println("enter text to be appended to file");
+                    comment = myObj.nextLine(); 
+                    textFile.appendToTextContents(comment); // important line
+                }
             }
             else if(option.equals("3")){
-                List<MyFile> fileList = new ArrayList<>();
-                do {
-                    System.out.println("enter  file path");
-                    inputPath = myObj.nextLine();
 
-                    MyFile file1 = null;
-                    try {
-                        file1 = new TextFile(inputPath);
-                    } catch (NonExistantFileException e) {
-                        e.printStackTrace();
-                    }
-                    fileList.add(file1);
-        
-                    System.out.println("Do you want to add another file? (yes/no)");
-                    option = myObj.nextLine();
-                } while (option.equalsIgnoreCase("yes"));
-        
-                System.out.println("File List:");
-                for (MyFile file : fileList) {
-                    System.out.println(file.filePath);
-                    try {
-                        file.copyFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                textFile = new TextFile();
+                exeFile = new ExecutableFile();
+                musicFile = new MusicFile();
+
+                Load = new Load(textFile, exeFile, musicFile);
+                thread = new Thread(Load);
+                thread.start();
+                thread.join();
             }
             else if(option.equals("4")){
-                List<MyFile> fileList = new ArrayList<>();
-                do {
-                    System.out.println("enter  file path");
-                    inputPath = myObj.nextLine();
-
-                    MyFile file1 = null;
-                    try {
-                        file1 = new TextFile(inputPath);
-                    } catch (NonExistantFileException e) {
-                        e.printStackTrace();
-                    }
-                    fileList.add(file1);
-        
-                    System.out.println("Do you want to add another file? (yes/no)");
-                    option = myObj.nextLine();
-                } while (option.equalsIgnoreCase("yes"));
-        
-                System.out.println("File List:");
-                for (MyFile file : fileList) {
-                    System.out.println(file.filePath);
-                    try {
-                        file.deleteFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
+                save = new Save(textFile, exeFile, musicFile);
+                thread = new Thread(save);
+                thread.start();
             }
-            else if(option.equals("5")){
-                System.out.println("enter text file path");
-                inputPath = myObj.nextLine();
-                try {
-                    TextFile txtfile = new TextFile(inputPath);
-                    System.out.println("enter text to be appended to file");
-                    comment = myObj.nextLine();
-                    txtfile.appendToTextContents(comment);
-                } catch (NonExistantFileException e) {
-                    System.out.println("text file cannot be opened");
-                }
-            }
-            else if(option.equals("6")){
-                System.out.println("Enter directory name: ");
-                inputPath = myObj.nextLine();
-                try {
-                    TextFile txtfile = new TextFile(inputPath);
-                    System.out.println(txtfile.textContents);
-                } catch (NonExistantFileException e) {
-                    System.out.println("file cannot be opened");
-                }
-            }
-            else if(option.equals("7")){
-                System.out.println("Enter mp3 file name: ");
-                inputPath = myObj.nextLine();
-                try {
-                    MusicFile mp3Test = new MusicFile(inputPath);
-                    System.out.println("enter tag number you would like to change: ");
-                    System.out.println("1. track ");
-                    System.out.println("2. artist ");
-                    System.out.println("3. title ");
-                    System.out.println("4. album ");
-                    System.out.println("5. year ");
-                    System.out.println("6. lyrics ");
-                    System.out.println("7. composer ");
-                    System.out.println("8. publisher ");
-                    System.out.println("9. originalArtist ");
-                    System.out.println("10. albumArtist ");
-                    System.out.println("11. copyright ");
-                    System.out.println("12. encoder ");
-                    option = myObj.nextLine();
-                    System.out.println("Enter the new tag");
-                    newTagName = myObj.nextLine();
-                    if(option.equals("1")){
-                        System.out.println("mp3 tag has been changed");
-                        mp3Test.setTrack(newTagName);
-                    } else if(option.equals("2")){
-                        System.out.println("mp3 tag has been changed");
-                        mp3Test.setArtist(newTagName);
-                    } else if(option.equals("3")){
-                        System.out.println("mp3 tag has been changed");
-                        mp3Test.setTitle(newTagName);
-                    } else if(option.equals("4")){
-                        System.out.println("mp3 tag has been changed");
-                        mp3Test.setAlbum(newTagName);
-                    } else if(option.equals("5")){
-                        System.out.println("mp3 tag has been changed");
-                        mp3Test.setYear(newTagName);
-                    } else if(option.equals("6")){
-                        System.out.println("mp3 tag has been changed");
-                        mp3Test.setLyrics(newTagName);
-                    } else if(option.equals("7")){
-                        System.out.println("mp3 tag has been changed");
-                        mp3Test.setComposer(newTagName);
-                    } else if(option.equals("8")){
-                        System.out.println("mp3 tag has been changed");
-                        mp3Test.setPublisher(newTagName);
-                    } else if(option.equals("9")){
-                        System.out.println("mp3 tag has been changed");
-                        mp3Test.setOriginalArtist(newTagName);
-                    } else if(option.equals("10")){
-                        System.out.println("mp3 tag has been changed");
-                        mp3Test.setAlbumArtist(newTagName);
-                    } else if(option.equals("11")){
-                        System.out.println("mp3 tag has been changed");
-                        mp3Test.setCopyright(newTagName);
-                    } else if(option.equals("12")){
-                        System.out.println("mp3 tag has been changed");
-                        mp3Test.setEncoder(newTagName);
-                    }
-                } catch (NonExistantFileException e) {
-                    System.out.println("No file found for object creation ");
-                }
-            }
-            else if(option.equals("8")){
-                System.out.println("Enter mp3 file name: ");
-                inputPath = myObj.nextLine();
-                try {
-                    MusicFile mp3Test = new MusicFile(inputPath);
-                    System.out.println("track: " + mp3Test.track);
-                    System.out.println("artist: " + mp3Test.artist);
-                    System.out.println("title: " + mp3Test.title);
-                    System.out.println("album: " + mp3Test.album);
-                    System.out.println("year: " + mp3Test.year);
-                    System.out.println("lyrics: " + mp3Test.lyrics);
-                    System.out.println("composer: " + mp3Test.composer);
-                    System.out.println("publisher: " + mp3Test.publisher);
-                    System.out.println("originalArtist: " + mp3Test.originalArtist);
-                    System.out.println("albumArtist: " + mp3Test.albumArtist);
-                    System.out.println("copyright: " + mp3Test.copyright);
-                    System.out.println("encoder: " + mp3Test.encoder);
-                } catch (NonExistantFileException e) {
-                    System.out.println("No file found for object creation ");
-                }
-            }
-            else if(option.equals("9")){
-                System.out.println("Enter file path: ");
-                inputPath = myObj.nextLine();
-                try {
-                    ExecutableFile exefile = new ExecutableFile(inputPath);
-                    if(exefile.executePermission == true){
-                        exefile.execute();
-                    } else{
-                        System.out.println("No executable permission to execute file");
-                        System.out.println("read: " + exefile.readPermission);
-                        System.out.println("write: " + exefile.writePermission); 
-                        System.out.println("execute: " + exefile.executePermission);  
-                    }
-                } catch (NonExistantFileException e) {
-                    System.out.println("file cannot be opened");
-                }
-            }
-            else if(option.equals("10")){
+            else if(option.equals("2")){
                 System.exit(0);
             }
+            else if(option.equals("1")){
+                System.out.println("Submeniu: ");
+                System.out.println("\t1. open text file ");
+                System.out.println("\t2. open executable file ");
+                System.out.println("\t3. open music file ");
+                option = myObj.nextLine();
+                System.out.println("enter file path: ");
+                inputPath = myObj.nextLine();  // Read user input
+                if(option.equals("1")){
+                    try {
+                        textFile = new TextFile(inputPath);
+                    } catch (NonExistantFileException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                } else if(option.equals("2")){
+                    
+                    try {
+                        exeFile = new ExecutableFile(inputPath); 
+                    } catch (NonExistantFileException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                } else if(option.equals("3")){
+                    
+                    try {
+                        musicFile = new MusicFile(inputPath); 
+                    } catch (NonExistantFileException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
+
+
+ 
+        /* 
+        try{
+            textFile = new TextFile(macOsTextFilePath);
+            exeFile = new ExecutableFile(macOsExeFilePath); 
+            musicFile = new MusicFile(macOsMusicFilePath); 
+        } catch (NonExistantFileException e){
+            System.out.println("No file found");
+        }
+        */
+
+        /* 
+        // printing values to be saved
+        System.out.println("Before serialisation: ");
+        if(textFile != null){
+            System.out.println("Text file: ");
+            System.out.println("\tSize: " + textFile.fileSize);
+            System.out.println("\tIs file hidden: " + textFile.isHidden);
+            System.out.println("\tFile extension: " + textFile.fileExtension);
+            System.out.println("\tFile encoding: " + textFile.encoding);
+        }
+        if(exeFile != null){
+            System.out.println("Exe file: ");
+            System.out.println("\tSize: " + exeFile.fileSize);
+            System.out.println("\tIs file hidden: " + exeFile.isHidden);
+            System.out.println("\tFile extension: " + exeFile.fileExtension);
+        }
+        if(musicFile != null){
+            System.out.println("Music file: ");
+            System.out.println("\tSize: " + musicFile.fileSize);
+            System.out.println("\tIs file hidden: " + musicFile.isHidden);
+            System.out.println("\tFile extension: " + musicFile.fileExtension);
+            System.out.println("\tArtist: " + musicFile.artist);
+            System.out.println("\tTitle: " + musicFile.title);
+            System.out.println("\talbum: " + musicFile.album);
+        }
+        
+        
+        // saving values
+        
+
+       
+
+        // loading old values
+        
+
+        // printing the loaded old values
+        System.out.println("");
+        System.out.println("After serialisation: ");
+        if(textFile != null){
+            System.out.println("Text file: ");
+            System.out.println("\tSize: " + textFile.fileSize);
+            System.out.println("\tIs file hidden: " + textFile.isHidden);
+            System.out.println("\tFile extension: " + textFile.fileExtension);
+            System.out.println("\tFile encoding: " + textFile.encoding);
+        }
+        if(exeFile != null){
+            System.out.println("Exe file: ");
+            System.out.println("\tSize: " + exeFile.fileSize);
+            System.out.println("\tIs file hidden: " + exeFile.isHidden);
+            System.out.println("\tFile extension: " + exeFile.fileExtension);
+        }
+        if(musicFile != null){
+            System.out.println("Music file: ");
+            System.out.println("\tSize: " + musicFile.fileSize);
+            System.out.println("\tIs file hidden: " + musicFile.isHidden);
+            System.out.println("\tFile extension: " + musicFile.fileExtension);
+            System.out.println("\tArtist: " + musicFile.artist);
+            System.out.println("\tTitle: " + musicFile.title);
+            System.out.println("\talbum: " + musicFile.album);
+        }
+        */
     }
 }
 
